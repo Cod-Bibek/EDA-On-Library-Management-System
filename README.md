@@ -1,18 +1,17 @@
-# Library Management System using SQL Project --P2
+# Library Management System using SQL Project
 
 ## Project Overview
 
 **Project Title**: Library Management System  
-**Level**: Intermediate  
-**Database**: `library_db`
+**Database**: `library_management_system_db`
 
 This project demonstrates the implementation of a Library Management System using SQL. It includes creating and managing tables, performing CRUD operations, and executing advanced SQL queries. The goal is to showcase skills in database design, manipulation, and querying.
 
-![Library_project](https://github.com/najirh/Library-System-Management---P2/blob/main/library.jpg)
+![Library_project](https://github.com/Cod-Bibek/EDA-On-Library-Management-System/blob/main/library.jpeg)
 
 ## Objectives
 
-1. **Set up the Library Management System Database**: Create and populate the database with tables for branches, employees, members, books, issued status, and return status.
+1. **Set up the Library Management System Database**: Create and populate the database with tables for branch, employee, members, book, issued status, and return status.
 2. **CRUD Operations**: Perform Create, Read, Update, and Delete operations on the data.
 3. **CTAS (Create Table As Select)**: Utilize CTAS to create new tables based on query results.
 4. **Advanced SQL Queries**: Develop complex queries to analyze and retrieve specific data.
@@ -20,92 +19,133 @@ This project demonstrates the implementation of a Library Management System usin
 ## Project Structure
 
 ### 1. Database Setup
-![ERD](https://github.com/najirh/Library-System-Management---P2/blob/main/library_erd.png)
+![ERD](https://github.com/Cod-Bibek/EDA-On-Library-Management-System/blob/main/ERD%20Of%20LMS.png)
 
-- **Database Creation**: Created a database named `library_db`.
-- **Table Creation**: Created tables for branches, employees, members, books, issued status, and return status. Each table includes relevant columns and relationships.
+- **Database Creation**: Created a database named `library_management_db`.
+- **Table Creation**: Created tables for branch, employee, members, book, issued status, and return status. Each table includes relevant columns and relationships.
 
 ```sql
-CREATE DATABASE library_db;
+-- Project : library Management System
+
+-- Create 'branch' Table
+
+CREATE DATABASE library_management_system_db;
 
 DROP TABLE IF EXISTS branch;
 CREATE TABLE branch
-(
-            branch_id VARCHAR(10) PRIMARY KEY,
-            manager_id VARCHAR(10),
-            branch_address VARCHAR(30),
-            contact_no VARCHAR(15)
-);
+		(
+			branch_id VARCHAR(10) PRIMARY KEY,
+			manager_id VARCHAR(10),
+			branch_address VARCHAR(50),
+			conact_num VARCHAR(20)
+			
+		);
 
 
--- Create table "Employee"
-DROP TABLE IF EXISTS employees;
-CREATE TABLE employees
-(
-            emp_id VARCHAR(10) PRIMARY KEY,
-            emp_name VARCHAR(30),
-            position VARCHAR(30),
-            salary DECIMAL(10,2),
-            branch_id VARCHAR(10),
-            FOREIGN KEY (branch_id) REFERENCES  branch(branch_id)
-);
+-- Create 'employee' Table
+DROP TABLE IF EXISTS employee;
+CREATE TABLE employee
+		(
+			emp_id VARCHAR(10) PRIMARY KEY,
+			emp_name VARCHAR(50),
+			emp_position VARCHAR(20),
+			salary INT,
+			branch_id VARCHAR(10), -- FK
+
+		);
+
+-- Create 'book' Table
+DROP TABLE IF EXISTS book;
+CREATE TABLE book
+		(
+			isbn VARCHAR(30) PRIMARY KEY,
+			book_title VARCHAR(100),
+			category VARCHAR(20),
+			rental_price FLOAT,
+			status VARCHAR(10),
+			author VARCHAR(50),
+			publisher VARCHAR(50)
+
+		)
 
 
--- Create table "Members"
+-- Create 'members' Table
 DROP TABLE IF EXISTS members;
 CREATE TABLE members
-(
-            member_id VARCHAR(10) PRIMARY KEY,
-            member_name VARCHAR(30),
-            member_address VARCHAR(30),
-            reg_date DATE
-);
+		(
+			member_id VARCHAR(10) PRIMARY KEY,
+			member_name VARCHAR(50),
+			member_address VARCHAR(50),
+			join_date DATE
+		);
 
 
-
--- Create table "Books"
-DROP TABLE IF EXISTS books;
-CREATE TABLE books
-(
-            isbn VARCHAR(50) PRIMARY KEY,
-            book_title VARCHAR(80),
-            category VARCHAR(30),
-            rental_price DECIMAL(10,2),
-            status VARCHAR(10),
-            author VARCHAR(30),
-            publisher VARCHAR(30)
-);
-
-
-
--- Create table "IssueStatus"
+-- Create 'issued_status' Table
 DROP TABLE IF EXISTS issued_status;
 CREATE TABLE issued_status
-(
-            issued_id VARCHAR(10) PRIMARY KEY,
-            issued_member_id VARCHAR(30),
-            issued_book_name VARCHAR(80),
-            issued_date DATE,
-            issued_book_isbn VARCHAR(50),
-            issued_emp_id VARCHAR(10),
-            FOREIGN KEY (issued_member_id) REFERENCES members(member_id),
-            FOREIGN KEY (issued_emp_id) REFERENCES employees(emp_id),
-            FOREIGN KEY (issued_book_isbn) REFERENCES books(isbn) 
-);
+		(
+			issued_id VARCHAR(10) PRIMARY KEY,
+			issued_member_id VARCHAR(10), -- FK
+			issued_book_name VARCHAR(100), 
+			issued_date DATE,
+			issued_book_isbn VARCHAR(30), -- FK
+			issued_emp_id VARCHAR(10) -- FK
+
+		);
 
 
-
--- Create table "ReturnStatus"
+-- Create return_status Table
 DROP TABLE IF EXISTS return_status;
 CREATE TABLE return_status
-(
-            return_id VARCHAR(10) PRIMARY KEY,
-            issued_id VARCHAR(30),
-            return_book_name VARCHAR(80),
-            return_date DATE,
-            return_book_isbn VARCHAR(50),
-            FOREIGN KEY (return_book_isbn) REFERENCES books(isbn)
-);
+		(
+			return_id VARCHAR(10) PRIMARY KEY,
+			issued_id VARCHAR(10),
+			return_book_name VARCHAR(100),
+			return_date DATE,
+			return_book_isbn VARCHAR(30) -- FK
+		);
+
+
+
+-- FOREGIN KEY 
+
+ALTER TABLE issued_status
+ADD CONSTRAINT fk_members
+FOREIGN KEY (issued_member_id)
+REFERENCES members (member_id);
+
+
+ALTER TABLE issued_status
+ADD CONSTRAINT fk_book
+FOREIGN KEY (issued_book_isbn)
+REFERENCES book (isbn);
+
+
+ALTER TABLE issued_status
+ADD CONSTRAINT fk_employee
+FOREIGN KEY (issued_emp_id)
+REFERENCES employee (emp_id);
+
+
+ALTER TABLE return_status
+ADD CONSTRAINT fk_book_issued
+FOREIGN KEY (return_book_isbn)
+REFERENCES book (isbn);
+
+
+ALTER TABLE employee
+ADD CONSTRAINT fk_branch
+FOREIGN KEY (branch_id)
+REFERENCES branch (branch_id);
+
+
+-- Ensuring data imported for all tables.
+SELECT * FROM book;
+SELECT * FROM employee;
+SELECT * FROM branch;
+SELECT * FROM issued_status;
+SELECT * FROM return_status;
+SELECT * FROM members;
 
 ```
 
