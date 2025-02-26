@@ -157,12 +157,27 @@ SELECT * FROM members;
 - **Delete**: Removed records from the `members` table as needed.
 
 **Task 1. Create a New Book Record**
--- "978-1-60129-456-2', 'To Kill a Mockingbird', 'Classic', 6.00, 'yes', 'Harper Lee', 'J.B. Lippincott & Co.')"
+-- Task 1. Create a New BOOK Record --  "978-1-60129-456-2', 'To Kill a Mockingbird', 'Classic', 6.00, 'yes', 'Harper Lee', 'J.B. Lippincott & Co.')"
 
-```sql
-INSERT INTO books(isbn, book_title, category, rental_price, status, author, publisher)
-VALUES('978-1-60129-456-2', 'To Kill a Mockingbird', 'Classic', 6.00, 'yes', 'Harper Lee', 'J.B. Lippincott & Co.');
-SELECT * FROM books;
+INSERT INTO book (isbn,book_title, category, rental_price, status, author, publisher)
+VALUES
+	(
+		'978-1-60129-456-2',
+		'To Kill a Mockingbird',
+		'Classic',
+		6.00,
+		'yes', 
+		'Harper Lee', 
+		'J.B Lipptincoot & Co.' -- 'J.B. Lippincott & Co.'
+	);
+
+-- Edit Publisher name
+
+UPDATE book
+SET publisher = 'J.B. Lippincott & Co.'
+WHERE isbn = '978-1-60129-456-2';
+
+SELECT * FROM book;
 ```
 **Task 2: Update an Existing Member's Address**
 
